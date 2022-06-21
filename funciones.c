@@ -4,15 +4,21 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <math.h>
-#include <list.h>
-#include <funciones.h>
+#include "list.h"
+#include "funciones.h"
+
+int is_equal_string(void * key1, void * key2) 
+{
+    if(strcmp((char*)key1, (char*)key2)==0) return 1;
+    return 0;
+}
 
 void ingresarApp(Red *total){
     int opcion, opcion2;
-    char nombreUsu[100], contraseñaUsu[100];
+    char nombreUsu[100], contrasenaUsu[100];
     printf(" 1 -> Registrarse\n");
     printf(" 2 -> Iniciar sesion\n");
-    printf(" 3 -> Salir\n")
+    printf(" 3 -> Salir\n");
     scanf("%d", &opcion);
     while(opcion < 1 || opcion > 3){
         printf("Ingrese una opcion valida\n");
@@ -24,8 +30,8 @@ void ingresarApp(Red *total){
         printf("Ingrese el nombre de usuario: ");
         scanf("%[^\n]s", nombreUsu);
         printf("\nIngrese la contraseña: ");
-        scanf("%[^\n]s", contraseñaUsu);
-        if(validarUsuario(total, nombreUsu, contraseñaUsu)) menu();
+        scanf("%[^\n]s", contrasenaUsu);
+        if(validarUsuario(total, nombreUsu, contrasenaUsu)) menu();
         else 
         {
             printf("Usuario invalido\n");
@@ -33,7 +39,7 @@ void ingresarApp(Red *total){
             printf("1. SI         2.NO\n");
             scanf("%d", &opcion2);
             if(opcion2 == 1){
-                while(validarUsuario(total, nombreUsu, contraseñaUsu) == false){
+                while(validarUsuario(total, nombreUsu, contrasenaUsu) == false){
                     printf("Usuario invalido\n");
                     printf("Desea volver a ingresar?\n");
                     printf("1. SI         2.NO      3. Registrase\n");
@@ -42,11 +48,11 @@ void ingresarApp(Red *total){
                         printf("Ingrese el nombre de usuario: ");
                         scanf("%[^\n]s", nombreUsu);
                         printf("\nIngrese la contraseña: ");
-                        scanf("%[^\n]s", contraseñaUsu);
+                        scanf("%[^\n]s", contrasenaUsu);
                     }
                     if(opcion2 == 2) return;
                     if (opcion2 == 3){
-                        registrarUsuario();
+                        registrarUsuario(total);
                         return;
                     }
                 }
@@ -120,7 +126,7 @@ void menu(){
         if(opcion == 0) break;
     }
     return 0;
-
+}
    
 Red *crearRed(){
     Red *usuario = (Red *) malloc(sizeof(Red));
@@ -130,18 +136,20 @@ Red *crearRed(){
         return NULL;
     }
 
-    red->totalUsuarios = createMap(is_equal_string);
-    red->gustos = createMap();
-    red->cantidad = 0;
+    usuario->cantidad = createMap(is_equal_string);
+    usuario->gustos = createMap(is_equal_string);
+    usuario->cantidad = 0;
     
     usuario = 0;
 
     return usuario;
 }
-Usuario *crearUsuario(){
-  Usuario *aux = (Usuario *) malloc(sizeof(Usuario));
+
+usuario *crearUsuario(){
+  usuario *aux = (usuario *) malloc(sizeof(usuario));
   aux->edad = 0;
 }
+
 void importar(FILE *archivo, Red* totalUsuarios)
 {
     int i;
@@ -151,7 +159,7 @@ void importar(FILE *archivo, Red* totalUsuarios)
     {
         linea[strcspn(linea, "\n")] = 0;
 
-        Usuario* AuxUsu = crearUsuario();
+        usuario* AuxUsu = crearUsuario();
         tipoGustos* auxgus = crearGustos();
         
         for (int i = 0; i < 5; i++)

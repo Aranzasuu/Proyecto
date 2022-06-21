@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "list.h"
-#include "defFunciones.h"
+#include "funciones.h"
 
 typedef struct Node Node;
 

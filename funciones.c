@@ -55,7 +55,8 @@ int is_equal_string(void * key1, void * key2)
     return 0;
 }
 
-void ingresarApp(Red *total){
+void ingresarApp(Red *total)
+{
     int opcion, intento = 0;
     char nomUsuario[100], contUsuario[100];
 
@@ -70,41 +71,48 @@ void ingresarApp(Red *total){
         printf("Ingrese una opcion valida: ");
         scanf("%d", &opcion);
     }
-    
-    if(opcion == 1) registrarUsuario(total);
-    else if(opcion == 2) {
-        printf("ingrese su nombre de usuario: ");
-        scanf("%[^\n]s", nomUsuario);
-        /*while(validarUsuario(total->totalUsuarios, nomUsuario) == false){
-            printf("El nombre de usuario es invalido, ingrese uno valido: ");
-            scanf("%[^\n]s", nomUsuario);
-            intento++;
-            if(intento == 4){
-                printf("Demasiados intentos, lo redirigiremos al proceso de registro ...\n");
-                registrarUsuario(total);
-                return;
-            }
-        }*/
-        intento = 0;
-        printf("ingrese su contraseña: ");
-        scanf("%[^\n]s", contUsuario);
-        /*while(validarContraseña(total->totalUsuarios,nomUsuario,contUsuario) == false){
-            printf("Contraseña incorrecta, ingrese nuevamente: ");
-            scanf("%[^\n]s", contUsuario);
-            intento++;
-            if(intento == 4){
-                printf("Demasiados intentos, lo ressirigiremos a la pagina principal ...\n");
-                ingresarApp(total);
-                return;
-            }
-        }*/
 
-        strcpy(total->usuarioIngresado,nomUsuario);
-        menu(total);
-    }
-    else{
-        printf("Ha salido correctamente de la aplicacion! :D\n");
-        return;
+    switch(opcion){
+        case 1:
+            registrarUsuario(total);
+            break;
+        case 2:
+            printf("ingrese su nombre de usuario: ");
+            getchar();
+            scanf("%[^\n]s", nomUsuario);
+            while(validarUsuario(total->totalUsuarios, nomUsuario) == false){
+                printf("El nombre de usuario es invalido, ingrese uno valido: ");
+                getchar();
+                scanf("%[^\n]s", nomUsuario);
+                intento++;
+                if(intento == 4){
+                    printf("Demasiados intentos, lo redirigiremos al proceso de registro ...\n");
+                    registrarUsuario(total);
+                    return;
+                }
+            }
+            intento = 0;
+            printf("ingrese su contraseña: ");
+            getchar();
+            scanf("%[^\n]s", contUsuario);
+            while(validarContrasena(total->totalUsuarios,nomUsuario,contUsuario) == false){
+                printf("Contraseña incorrecta, ingrese nuevamente: ");
+                getchar();
+                scanf("%[^\n]s", contUsuario);
+                intento++;
+                if(intento == 4){
+                    printf("Demasiados intentos, lo ressirigiremos a la pagina principal ...\n");
+                    ingresarApp(total);
+                    return;
+                }
+            }
+
+            strcpy(total->usuarioIngresado,nomUsuario);
+            menu(total);
+            break;
+        case 3:
+            printf("Ha salido correctamente de la aplicacion! :D\n");
+            return;
     }
 }
 
@@ -146,23 +154,31 @@ void registrarUsuario(Red *total){
     printf("Advertencia: Asegurece de responder todas las preguntas y en el formato indicado\n");
 
     printf("Ingrese su primer nombre y primer apellido = ");
+    getchar();
     scanf("%[^\n]s", nomUsu);
     while(validarRepeticiones(total->totalUsuarios,nomUsu)){
         printf("Ese nombre ya está registrado, ingrese otro: ");
+        getchar();
         scanf("%[^\n]s",nomUsu);
     }
     strcpy(new->nombre,nomUsu);
+
     printf("\nIngrese su nombre de usuario = ");
-    while(validarRepeticiones(total->totalUsuarios,apodoU)){
+    getchar();
+    scanf("%[^\n]s",apodoU);
+    while(validarRepeticiones(total->totalUsuarios, apodoU)){
         printf("Ese apodo ya esta registrado, ingrese otro: ");
+        getchar();
         scanf("%[^\n]s",apodoU);
     }
     strcpy(new->apodo,apodoU);
 
     printf("Ingrese su contraseña, para mayor seguridad ingrese mas de 5 letras: ");
+    getchar();
     scanf("%[^\n]s",contraU);
     while(strlen(contraU) < 5){
         printf("minimo de caracteres no alcanzado, ingrese de nuevo su contraseña: ");
+        getchar();
         scanf("%[^\n]s",contraU);
     }
     strcpy(new->contrasena,contraU);
@@ -387,6 +403,10 @@ bool validarUsuario(Map *total, char *nombreU){
     return false;*/
 }
 
+bool validarContrasena(Map *total, char *nomUsuario, char *contUsuario){
+    return true;
+}
+
 void impresionMenu(){
     printf("*********** MENU **********\n");
     printf("1. Ingresar Perfil\n");
@@ -475,6 +495,7 @@ usuario *crearUsuario(){
     aux->gustos = (tipoGustos *) malloc(sizeof(tipoGustos));
     aux->fav = createList();
     aux->match = createList();
+    aux->compatibilidad = 0;
 
     return aux;
 }

@@ -6,16 +6,16 @@
 
 typedef struct tipoGustos{ 
     char orientacionS[100];  //* 
-    char *generofav;    //* genero musical favorito (5)
-    char *colorfav;     //color favorito
-    char *PelLib;       //Pelicula o libro
-    char *casaSalir;    //* Quedarse en casa o salir
-    char *estacionfav;  //
-    char *liqfav;
-    char *playaMontana;
-    char *depVid;
-    char *PerroGato;
-    char *comida;      //vegano, vegetariano, carnívoro
+    char generofav[100];    //* genero musical favorito (5)
+    char colorfav[100];     //color favorito
+    char PelLib[100];       //Pelicula o libro
+    char casaSalir[100];    //* Quedarse en casa o salir
+    char estacionfav[100];  //
+    char liqfav[100];
+    char playaMontana[100];
+    char depVid[100];
+    char PerroGato[100];
+    char comida[100];      //vegano, vegetariano, carnívoro
 } tipoGustos;
 
 typedef struct usuario{
@@ -39,7 +39,8 @@ typedef struct Red{
 int is_equal_string(void * key1, void * key2);
 const char *get_csv_field (char * tmp, int k);
 
-void mostrarMapa(Red *total);
+void mostrarUsuario(usuario *usu);
+void mostrarMapa(Map *totalUsuarios);
 
 void importar(FILE *archivo, Red *total);
 Red *crearRed();

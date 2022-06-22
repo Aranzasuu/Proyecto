@@ -59,8 +59,6 @@ void ingresarApp(Red *total){
     int opcion;
     char nomUsuario[100], contUsuario[100];
 
-    mostrarMapa(total);
-
     printf("\n\n                 Bienvenidx a TYNDER!\n-------------------------------------------------------\n\n");
     printf(" 1 -> Registrarse\n");
     printf(" 2 -> Iniciar sesion\n");
@@ -78,18 +76,33 @@ void ingresarApp(Red *total){
     menu(total);
 }
 
-void mostrarMapa(Red *total){
-    usuario *usu = firstMap(total->totalUsuarios);
-    int cont = 1;
-
-    while(usu != NULL){
-        printf("usuario numero #%d\n",cont);
-        printf("nombre = %s\n", usu->nombre);
-        printf("apodo = %s\n", usu->apodo);
-        printf("genero musical fav = %s\n", usu->gustos->generofav);
-        cont++;
-        usu = nextMap(total->totalUsuarios);
+void mostrarMapa(Map *totalUsuarios){
+    usuario *unitario = firstMap(totalUsuarios);
+    while(unitario != NULL){
+        mostrarUsuario(unitario);
+        unitario = nextMap(totalUsuarios);
     }
+}
+
+void mostrarUsuario(usuario *usu){
+    printf("----------------------------------------------------\n\n");
+    printf("nombre = %s\n", usu->nombre);
+    printf("apodo = %s\n",usu->apodo);
+    printf("contrasena = %s\n",usu->contrasena);
+    printf("edad = %s\n",usu->edad);
+    printf("identidad sexual = %s\n",usu->identidadG);
+    printf("orientacion sexual = %s\n",usu->gustos->orientacionS);
+    printf("genero musical fav = %s\n",usu->gustos->generofav);
+    printf("color fav = %s\n",usu->gustos->colorfav);
+    printf("peli o libros = %s\n",usu->gustos->PelLib);
+    printf("casa o salir = %s\n",usu->gustos->casaSalir);
+    printf("estacion fav = %s\n",usu->gustos->estacionfav);
+    printf("bebestible fav = %s\n",usu->gustos->liqfav);
+    printf("playa o montana = %s\n",usu->gustos->playaMontana);
+    printf("dep o vid = %s\n",usu->gustos->depVid);
+    printf("perro o gato = %s\n",usu->gustos->PerroGato);
+    printf("comida = %s\n",usu->gustos->comida);
+    printf("----------------------------------------------------\n\n");
 }
 
 /*
@@ -238,19 +251,23 @@ usuario *crearUsuario(){
 
 void importar(FILE *archivo, Red* total)
 {
+    printf("El archivo se abrio correctamente\n");
     int i;
-    char linea[1024];
+    char linea[100024];
 
-    while (fgets(linea, 1024, archivo) != NULL)
+    while (fgets(linea, 100024, archivo) != NULL)
     {
         linea[strcspn(linea, "\n")] = 0;
+        printf("(*) linea = %s\n",linea);
 
         usuario* AuxUsu = crearUsuario();
         AuxUsu->gustos = (tipoGustos *) malloc(sizeof(tipoGustos));
+        printf("se crea el usuario\n");
         
         for (int i = 0; i < 16; i++)
         {
             const char* aux = get_csv_field(linea, i);
+            total->cantidad++;
 
             switch (i)
             {
@@ -304,11 +321,13 @@ void importar(FILE *archivo, Red* total)
                     break;
             }
         }
+        
         usuario *us = searchMap(total->totalUsuarios,AuxUsu->nombre);
         if(us == NULL){
             insertMap(total->totalUsuarios, AuxUsu->nombre,AuxUsu);
         }
     }
+    mostrarMapa(total->totalUsuarios);
     fclose(archivo);
     printf("Archivo importado!\n\n");
 }

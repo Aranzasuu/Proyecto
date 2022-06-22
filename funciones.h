@@ -22,8 +22,8 @@ typedef struct usuario{
     char nombre[100];
     char apodo[100];
     char contrasena[100];
-    char edad[3];
-    char identidadG[100];
+    int edad;
+    char identidadG[100];     // arreglar la identidad, a: masculino, femenino, no binario :p
     tipoGustos *gustos;
     List *fav;
     List *match;
@@ -34,6 +34,7 @@ typedef struct Red{
     Map *totalUsuarios;
     Map *gustos;
     int cantidad;
+    char usuarioIngresado[100];
 } Red;
 
 int is_equal_string(void * key1, void * key2);
@@ -44,10 +45,15 @@ void mostrarMapa(Map *totalUsuarios);
 
 void importar(FILE *archivo, Red *total);
 Red *crearRed();
+usuario *crearUsuario();
 void ingresarApp(Red *total);
 void impresionMenu();
-bool validarUsuario(Red *total, char *nombreUsu, char *contrasenaUsu);
 void registrarUsuario(Red *total);
 void menu(Red *total);
+
+void ingresarPerfil(Red *total);
+
+bool validarUsuario(Map *total, char *nombreUsu);
+bool validarRepeticiones(Map *mapa, char *key);
 
 #endif

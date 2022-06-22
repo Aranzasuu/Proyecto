@@ -7,10 +7,15 @@
 #include "funciones.h"
 
 int main(){
-    // cargar usuarios
     Red *total = crearRed();
-    //importarUsuarios();
+
+    FILE *archivo = fopen("100usuarios.csv","r");
+    if(archivo == NULL){
+        printf("No se pudo abrir el archivo\n");
+        return(EXIT_FAILURE);
+    }
+    importar(archivo,total);
+
     ingresarApp(total);
-    // menu inicial
     return 0;
 }

@@ -142,6 +142,7 @@ void mostrarUsuario(usuario *usu){
     printf("dep o vid = %s\n",usu->gustos->depVid);
     printf("perro o gato = %s\n",usu->gustos->PerroGato);
     printf("comida = %s\n",usu->gustos->comida);
+    printf("compatibilidad = %d\n",usu->compatibilidad);
     printf("----------------------------------------------------\n\n");
 }
 
@@ -396,15 +397,51 @@ bool validarUsuario(Map *total, char *nombreU){
     usuario *aux = searchMap(total, nombreU);
     if(aux == NULL) return false;
     return true;
-    /*while(aux != NULL){
-        if(strcmp(nombreU,aux->nombre)) return true;
-        aux = nextMap(total->totalUsuarios);
-    }
-    return false;*/
 }
 
 bool validarContrasena(Map *total, char *nomUsuario, char *contUsuario){
-    return true;
+    usuario *buscado = searchMap(total,nomUsuario);
+    if(buscado != NULL){
+        if(strcmp(contUsuario,buscado->contrasena) == 0) return true;
+        else return false;
+    }
+    return false;
+}
+
+void calcularCompatibilidad(Red *total){
+    usuario *ingreso = searchMap(total->totalUsuarios,total->usuarioIngresado);
+    if(ingreso == NULL){
+        printf("Hubo un error, el usuario no se ingresó correctamente\n");
+        menu(total);
+    }
+    usuario *indice = firstMap(total->totalUsuarios);
+    while(indice != NULL){
+        if(strcmp(indice->gustos->casaSalir,ingreso->gustos->casaSalir) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->colorfav,ingreso->gustos->colorfav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->comida,ingreso->gustos->comida) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->depVid,ingreso->gustos->depVid) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->estacionfav,ingreso->gustos->estacionfav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->generofav,ingreso->gustos->generofav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->liqfav,ingreso->gustos->liqfav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->orientacionS,ingreso->gustos->orientacionS) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->PelLib,ingreso->gustos->PelLib) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->PerroGato,ingreso->gustos->PerroGato) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->playaMontana,ingreso->gustos->playaMontana) == 0) indice->compatibilidad += 1;
+        indice = nextMap(total->totalUsuarios);
+    }
+    mostrarMapa(total->totalUsuarios);
+}
+
+void BuscarPersonas(Red *total){
+    int opcion;
+    calcularCompatibilidad(total);
+    printf("Desea buscar personas similares a usted, o diferentes?\n1. Similares  2. Distintos\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 2){
+        printf("Opcion invalida, ingrese nuevamente la operacion a realizar: ");
+        scanf("%d", &opcion);
+    }
+
 }
 
 void impresionMenu(){
@@ -439,7 +476,7 @@ void menu(Red * total){
             //EditarGustos();
             break;
         case 4:
-            //BuscarPersonas();
+            BuscarPersonas(total);
             break;
         case 5:
             //ListFav();

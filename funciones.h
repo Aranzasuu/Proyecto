@@ -28,6 +28,7 @@ typedef struct usuario{
     List *fav;
     List *match;
     Map *chat;
+    int compatibilidad;
 } usuario;
 
 typedef struct Red{
@@ -52,8 +53,12 @@ void registrarUsuario(Red *total);
 void menu(Red *total);
 
 void ingresarPerfil(Red *total);
+void BuscarPersonas(Red *total);
+void editarPerfil(Red *total);
+void EditarGustos(Red *total);
 
-bool validarUsuario(Map *total, char *nombreUsu);
-bool validarRepeticiones(Map *mapa, char *key);
+bool validarInfo(Map *mapa, char *key);
+bool validarContrasena(Map *totalUsuarios, char *nomUsuario, char *contUsuario);
+void calcularCompatibilidad(Red *total);
 
 #endif

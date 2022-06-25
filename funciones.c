@@ -55,14 +55,15 @@ int is_equal_string(void * key1, void * key2)
     return 0;
 }
 
-void ingresarApp(Red *total){
+void ingresarApp(Red *total)
+{
     int opcion, intento = 0;
     char nomUsuario[100], contUsuario[100];
 
     printf("\n\n                 Bienvenidx a TYNDER!\n-------------------------------------------------------\n\n");
     printf(" 1 -> Registrarse\n");
     printf(" 2 -> Iniciar sesion\n");
-    printf(" 3 -> Salir\n\n");
+    printf(" 3 -> Salir de la app\n\n");
     printf("Ingrese su opcion: ");
     
     scanf("%d", &opcion);
@@ -70,41 +71,49 @@ void ingresarApp(Red *total){
         printf("Ingrese una opcion valida: ");
         scanf("%d", &opcion);
     }
-    
-    if(opcion == 1) registrarUsuario(total);
-    else if(opcion == 2) {
-        printf("ingrese su nombre de usuario: ");
-        scanf("%[^\n]s", nomUsuario);
-        /*while(validarUsuario(total->totalUsuarios, nomUsuario) == false){
-            printf("El nombre de usuario es invalido, ingrese uno valido: ");
-            scanf("%[^\n]s", nomUsuario);
-            intento++;
-            if(intento == 4){
-                printf("Demasiados intentos, lo redirigiremos al proceso de registro ...\n");
-                registrarUsuario(total);
-                return;
-            }
-        }*/
-        intento = 0;
-        printf("ingrese su contraseña: ");
-        scanf("%[^\n]s", contUsuario);
-        /*while(validarContraseña(total->totalUsuarios,nomUsuario,contUsuario) == false){
-            printf("Contraseña incorrecta, ingrese nuevamente: ");
-            scanf("%[^\n]s", contUsuario);
-            intento++;
-            if(intento == 4){
-                printf("Demasiados intentos, lo ressirigiremos a la pagina principal ...\n");
-                ingresarApp(total);
-                return;
-            }
-        }*/
 
-        strcpy(total->usuarioIngresado,nomUsuario);
-        menu(total);
-    }
-    else{
-        printf("Ha salido correctamente de la aplicacion! :D\n");
-        return;
+    switch(opcion){
+        case 1:
+            registrarUsuario(total);
+            break;
+        case 2:
+            printf("Ingrese su nombre de usuario: ");
+            getchar();
+            scanf("%[^\n]s", nomUsuario);
+            while(validarInfo(total->totalUsuarios, nomUsuario) == false){
+                printf("El nombre de usuario es invalido, ingrese uno valido: ");
+                getchar();
+                scanf("%[^\n]s", nomUsuario);
+                intento++;
+                if(intento == 4){
+                    printf("(!!) Demasiados intentos, lo redirigiremos al proceso de registro ...\n\n");
+                    registrarUsuario(total);
+                    return;
+                }
+            }
+            intento = 0;
+            printf("\nIngrese su contrasena: ");
+            getchar();
+            scanf("%[^\n]s", contUsuario);
+            while(validarContrasena(total->totalUsuarios,nomUsuario,contUsuario) == false){
+                printf("\n(!!) Contrasena incorrecta, ingrese nuevamente: ");
+                getchar();
+                scanf("%[^\n]s", contUsuario);
+                intento++;
+                if(intento == 4){
+                    printf("\n(!!) Demasiados intentos, lo ressirigiremos a la pagina principal ...\n");
+                    ingresarApp(total);
+                    return;
+                }
+            }
+
+            strcpy(total->usuarioIngresado,nomUsuario);
+            printf("\n");
+            menu(total);
+            break;
+        case 3:
+            printf("\nHa salido correctamente de la aplicacion! :D\n");
+            return;
     }
 }
 
@@ -118,23 +127,22 @@ void mostrarMapa(Map *totalUsuarios){
 
 void mostrarUsuario(usuario *usu){
     printf("----------------------------------------------------\n\n");
-    printf("nombre = %s\n", usu->nombre);
-    printf("apodo = %s\n",usu->apodo);
-    printf("contrasena = %s\n",usu->contrasena);
-    printf("edad = %d\n",usu->edad);
-    printf("identidad sexual = %s\n",usu->identidadG);
-    printf("orientacion sexual = %s\n",usu->gustos->orientacionS);
-    printf("genero musical fav = %s\n",usu->gustos->generofav);
-    printf("color fav = %s\n",usu->gustos->colorfav);
-    printf("peli o libros = %s\n",usu->gustos->PelLib);
-    printf("casa o salir = %s\n",usu->gustos->casaSalir);
-    printf("estacion fav = %s\n",usu->gustos->estacionfav);
-    printf("bebestible fav = %s\n",usu->gustos->liqfav);
-    printf("playa o montana = %s\n",usu->gustos->playaMontana);
-    printf("dep o vid = %s\n",usu->gustos->depVid);
-    printf("perro o gato = %s\n",usu->gustos->PerroGato);
-    printf("comida = %s\n",usu->gustos->comida);
-    printf("----------------------------------------------------\n\n");
+    printf("INFORMACION PRINCIPAL: \n\n");
+    printf("NOMBRE               > %s\nAPODO                > %s\nCONTRASENA           > %s\nEDAD                 > %d\n", usu->nombre, usu->apodo, usu->contrasena, usu->edad);
+    printf("IDENTIDAD SEXUAL     > %s\nORIENTACION SEXUAL   > %s\n",usu->identidadG, usu->gustos->orientacionS);
+    printf("\nGUSTOS: \n\n");
+    printf("> genero musical favorito ----- %s\n",usu->gustos->generofav);
+    printf("> color favorito -------------- %s\n",usu->gustos->colorfav);
+    printf("> peliculas o libros ---------- %s\n",usu->gustos->PelLib);
+    printf("> casa o salir ---------------- %s\n",usu->gustos->casaSalir);
+    printf("> estacion favorita ----------- %s\n",usu->gustos->estacionfav);
+    printf("> bebestible favorito --------- %s\n",usu->gustos->liqfav);
+    printf("> playa o montana ------------- %s\n",usu->gustos->playaMontana);
+    printf("> deportes o videojuegos ------ %s\n",usu->gustos->depVid);
+    printf("> perros o gatos -------------- %s\n",usu->gustos->PerroGato);
+    printf("> Dieta ----------------------- %s\n",usu->gustos->comida);
+    //printf("-> compatibilidad = %d\n",usu->compatibilidad);
+    printf("----------------------------------------------------\n\n\n\n\n");
 }
 
 void registrarUsuario(Red *total){
@@ -142,43 +150,52 @@ void registrarUsuario(Red *total){
     int edadU, identidad, orientacion, generoMus, color, CS, estacion, bebestible, PM, DV, PG, dieta;
     char nomUsu[100],apodoU[100], contraU[100];
 
-    printf("**************** REGISTRO ****************");
-    printf("Advertencia: Asegurece de responder todas las preguntas y en el formato indicado\n");
+    printf("\n****************** REGISTRO ******************\n");
+    printf("\n(!!) Advertencia: Asegurece de responder todas las \npreguntas y en el formato indicado\n\n");
 
-    printf("Ingrese su primer nombre y primer apellido = ");
+    printf("-> Ingrese su nombre(s) y apellido(s) = ");
+    getchar();
     scanf("%[^\n]s", nomUsu);
-    while(validarRepeticiones(total->totalUsuarios,nomUsu)){
-        printf("Ese nombre ya está registrado, ingrese otro: ");
+    while(validarInfo(total->totalUsuarios,nomUsu)){
+        printf("\nEse nombre ya está registrado, ingrese otro: ");
+        getchar();
         scanf("%[^\n]s",nomUsu);
     }
     strcpy(new->nombre,nomUsu);
-    printf("\nIngrese su nombre de usuario = ");
-    while(validarRepeticiones(total->totalUsuarios,apodoU)){
-        printf("Ese apodo ya esta registrado, ingrese otro: ");
+
+    printf("\n-> Ingrese su nombre de usuario = ");
+    getchar();
+    scanf("%[^\n]s",apodoU);
+    while(validarInfo(total->totalUsuarios, apodoU)){
+        printf("\n(!!) Ese apodo ya esta registrado, ingrese otro: ");
+        getchar();
         scanf("%[^\n]s",apodoU);
     }
     strcpy(new->apodo,apodoU);
 
-    printf("Ingrese su contraseña, para mayor seguridad ingrese mas de 5 letras: ");
+    printf("\n-> Ingrese su contraseña, para mayor seguridad ingrese mas de 5 letras: ");
+    getchar();
     scanf("%[^\n]s",contraU);
     while(strlen(contraU) < 5){
-        printf("minimo de caracteres no alcanzado, ingrese de nuevo su contraseña: ");
+        printf("\n(!!) Minimo de caracteres no alcanzado, ingrese de nuevo su contraseña: ");
+        getchar();
         scanf("%[^\n]s",contraU);
     }
     strcpy(new->contrasena,contraU);
 
-    printf("(!!) recuerde que debes ser mayor de 18 años para poder ocupar la aplicacion\n");
-    printf("ingrese su edad: ");
+    printf("\n(!!) Recuerde que debes ser mayor de 18 años para poder ocupar la aplicacion\n");
+    printf("-> Ingrese su edad: ");
     scanf("%d", &edadU);
     if(edadU < 18){
-        printf("no puede ingresar a la aplicacion\n");
+        printf("\n(!!) No puede ingresar a la aplicacion\n");
         ingresarApp(total);
     }
+    new->edad = edadU;
 
-    printf("ingrese la opcion con la cual se identifica:\n1. Masculino   2. Femenino  3.NoBinario\n");
+    printf("\n-> Ingrese la opcion con la cual se identifica:\n1. Masculino   2. Femenino  3.NoBinario\n");
     scanf("%d", &identidad);
     while(identidad < 1 || identidad > 3){
-        printf("Ingrese una opcion valida\n");
+        printf("\n(!!) Ingrese una opcion valida\n");
         scanf("%d", &identidad);
     }
     switch(identidad){
@@ -193,11 +210,11 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("(*) Seccion de gustos -------------------------\n\n");
-    printf("a) ¿Cual es su orientacion sexual?\n1. heterosexual  2. homosexual  3.bisexual  4.pansexual  5.asexual\n");
+    printf("(*) Seccion de gustos ----------------------------\n\n");
+    printf("-> ¿Cual es su orientacion sexual?\n1. heterosexual  2. homosexual  3.bisexual  4.pansexual  5.asexual\n");
     scanf("%d", &orientacion);
     while(orientacion < 1 || orientacion > 5){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &orientacion);
     }
     switch(orientacion){
@@ -218,10 +235,10 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("b) Escoga entre estos generos musicales, su favorito:\n1. Rap  2. Rock  3.Pop  4. Electronica  5. Jazz  6.Reggaeton\n");
+    printf("-> Escoga entre estos generos musicales, su favorito:\n1. Rap  2. Rock  3.Pop  4. Electronica  5. Jazz  6.Reggaeton\n");
     scanf("%d", &generoMus);
     while(generoMus < 1 || generoMus > 6){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &generoMus);
     }
     switch(generoMus){
@@ -245,10 +262,10 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("c) Escoga entre estos colores, su favorito:\n1. Naranjo  2. Amarillo  3. Verde  4. Azul  5. Rojo  6. Morado\n");
+    printf("-> Escoga entre estos colores, su favorito:\n1. Naranjo  2. Amarillo  3. Verde  4. Azul  5. Rojo  6. Morado\n");
     scanf("%d", &color);
     while(color < 1 || color > 6){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &color);
     }
     switch(color){
@@ -272,19 +289,19 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("d) Prefieres salir o quedarte en casa?\n1. Casa  2. Salir\n");
+    printf("-> Prefieres salir o quedarte en casa?\n1. Casa  2. Salir\n");
     scanf("%d", &CS);
     while(CS < 1 || CS > 2){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &CS);
     }
     if(CS == 1) strcpy(new->gustos->casaSalir,"casa");
     else strcpy(new->gustos->casaSalir,"salir");
 
-    printf("e) Cual estacion del año es tu favorita:\n1. Otoño  2. Invierno  3. Primavera  4. Verano\n");
+    printf("-> Cual estacion del año es tu favorita:\n1. Otoño  2. Invierno  3. Primavera  4. Verano\n");
     scanf("%d", &estacion);
     while(estacion < 1 || estacion > 4){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &estacion);
     }
     switch(estacion){
@@ -302,10 +319,10 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("f) De estas opciones de bebesitbles, cual es tu preferida:\n1. Te  2. Cafe  3. Bebida\n");
+    printf("-> De estas opciones de bebesitbles, cual es tu preferida:\n1. Te  2. Cafe  3. Bebida\n");
     scanf("%d", &bebestible);
     while(bebestible < 1 || bebestible > 3){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &bebestible);
     }
     switch(bebestible){
@@ -320,37 +337,37 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("g) Prefieres la playa o la montaña:\n1. Playa  2.Montaña\n");
+    printf("-> Prefieres la playa o la montaña:\n1. Playa  2.Montaña\n");
     scanf("%d", &PM);
     while(PM < 1 || PM > 2){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &PM);
     }
     if(PM == 1) strcpy(new->gustos->playaMontana,"playa");
     else strcpy(new->gustos->playaMontana,"montana");
 
-    printf("h) Prefiers los deportes o los videojuegos:\n1. Deportes  2. Videojuegos\n");
+    printf("-> Prefiers los deportes o los videojuegos:\n1. Deportes  2. Videojuegos\n");
     scanf("%d", &DV);
     while(DV < 1 || DV > 2){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &DV);
     }
     if(DV == 1) strcpy(new->gustos->depVid,"deporte");
     else strcpy(new->gustos->depVid,"videojuegos");
 
-    printf("i) Prefieres los perros o los gatos:\n1. Perros  2. Gatos\n");
+    printf("-> Prefieres los perros o los gatos:\n1. Perros  2. Gatos\n");
     scanf("%d", &PG);
     while(PG < 1 || PG > 2){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &DV);
     }
     if(PG == 1) strcpy(new->gustos->PerroGato,"perro");
     else strcpy(new->gustos->PerroGato,"gato");
 
-    printf("De estas opciones, cual es tu dieta:\n1. Veganx  2. Vegetarianx  3. Carnivorx\n");
+    printf("-> De estas opciones, cual es tu dieta:\n1. Veganx  2. Vegetarianx  3. Carnivorx\n");
     scanf("%d", &dieta);
     while(dieta < 1 || dieta > 3){
-        printf("ingrese una opcion valida: ");
+        printf("\n(!!) Ingrese una opcion valida: ");
         scanf("%d", &dieta);
     }
     switch(dieta){
@@ -366,25 +383,60 @@ void registrarUsuario(Red *total){
     }
 
     insertMap(total->totalUsuarios,new->apodo,new);
-    printf("SU INFORMACION HA SIDO GUARDADA EXITOSAMENTE!\n");
+    total->cantidad++;
+    printf("\n\n ** SU INFORMACION HA SIDO GUARDADA EXITOSAMENTE!\n");
     ingresarApp(total);
 }
 
-bool validarRepeticiones(Map *mapa, char *key){
+bool validarInfo(Map *mapa, char *key){
     usuario *buscado = searchMap(mapa,key);
     if(buscado == NULL) return false;
     return true;
 }
 
-bool validarUsuario(Map *total, char *nombreU){
-    usuario *aux = searchMap(total, nombreU);
-    if(aux == NULL) return false;
-    return true;
-    /*while(aux != NULL){
-        if(strcmp(nombreU,aux->nombre)) return true;
-        aux = nextMap(total->totalUsuarios);
+bool validarContrasena(Map *total, char *nomUsuario, char *contUsuario){
+    usuario *buscado = searchMap(total,nomUsuario);
+    if(buscado != NULL){
+        if(strcmp(contUsuario,buscado->contrasena) == 0) return true;
+        else return false;
     }
-    return false;*/
+    return false;
+}
+
+void calcularCompatibilidad(Red *total){
+    usuario *ingreso = searchMap(total->totalUsuarios,total->usuarioIngresado);
+    if(ingreso == NULL){
+        printf("Hubo un error, el usuario no se ingresó correctamente\n");
+        menu(total);
+    }
+    usuario *indice = firstMap(total->totalUsuarios);
+    while(indice != NULL){
+        if(strcmp(indice->gustos->casaSalir,ingreso->gustos->casaSalir) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->colorfav,ingreso->gustos->colorfav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->comida,ingreso->gustos->comida) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->depVid,ingreso->gustos->depVid) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->estacionfav,ingreso->gustos->estacionfav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->generofav,ingreso->gustos->generofav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->liqfav,ingreso->gustos->liqfav) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->orientacionS,ingreso->gustos->orientacionS) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->PelLib,ingreso->gustos->PelLib) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->PerroGato,ingreso->gustos->PerroGato) == 0) indice->compatibilidad += 1;
+        if(strcmp(indice->gustos->playaMontana,ingreso->gustos->playaMontana) == 0) indice->compatibilidad += 1;
+        indice = nextMap(total->totalUsuarios);
+    }
+    mostrarMapa(total->totalUsuarios);
+}
+
+void BuscarPersonas(Red *total){
+    int opcion;
+    calcularCompatibilidad(total);
+    printf("Desea buscar personas similares a usted, o diferentes?\n1. Similares  2. Distintos\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 2){
+        printf("Opcion invalida, ingrese nuevamente la operacion a realizar: ");
+        scanf("%d", &opcion);
+    }
+
 }
 
 void impresionMenu(){
@@ -397,7 +449,7 @@ void impresionMenu(){
     printf("6. Ver Lista de Matchs\n");
     printf("7. Bandeja de mensajes\n");
     printf("8. Top 10 personas\n");
-    printf("9. Salir\n");
+    printf("9. Salir de la app\n");
     printf("--------------------------------\n");
 }
 
@@ -405,21 +457,23 @@ void menu(Red * total){
 
     impresionMenu();
     int opcion, opcion2;
+    printf("Ingrese la opcion que quiere realizar: ");
     scanf("%d", &opcion);
-    
+    printf("\n");
+
     while(opcion != 0){
         switch(opcion){
         case 1:
             ingresarPerfil(total);
             break;
         case 2: 
-            //editarPerfil();
+            editarPerfil(total);
             break;
         case 3: 
-            //EditarGustos();
+            EditarGustos(total);
             break;
         case 4:
-            //BuscarPersonas();
+            BuscarPersonas(total);
             break;
         case 5:
             //ListFav();
@@ -434,7 +488,7 @@ void menu(Red * total){
             //Top10();
             break;
         case 9: 
-            printf("\n\n****** Se ha cerrado correctamente la aplicacion, nos vemos! ******\n\n\n");
+            printf("\n\n****** Se ha cerrado correctamente la sesion, nos vemos! ******\n\n\n");
             return;
             
         default:
@@ -443,16 +497,259 @@ void menu(Red * total){
         }
         impresionMenu();
         printf("\nDesea realizar otra operacion?\n");
-        printf("NO -> ingrese 0\n");
-        printf("SI -> ingrese el numero de la operacion a realizar\n\ningrese su opcion: ");
+        printf("Ingrese su opcion: ");
         scanf("%d", &opcion);
-        if(opcion == 0) break;
     }
 }
 
 void ingresarPerfil(Red *total){
     usuario *buscado = searchMap(total->totalUsuarios,total->usuarioIngresado);
+    if(buscado == NULL){
+        printf("\n(!!) Ha ocurrido un error, no se puede ingresar al perfil\n");
+        menu(total);
+    }
+    printf("********** INFORMACION USUARIO **********\n");
     mostrarUsuario(buscado);
+}
+
+void editarPerfil(Red *total){
+    usuario *buscar = searchMap(total->totalUsuarios, total->usuarioIngresado);
+    if(buscar == NULL){
+        printf("Ha ocurrido un error, no se puede ingresar al perfil\n");
+        menu(total);
+    }
+
+    int opcion, veces = 1, edadU, opcionI;
+    char cambio[100];
+    printf("Que gustos desea cambiar?:\n1. Nombre\n2. Nombre usuario\n3. Contrasena\n4. Edad\n5. Identidad sexual\n\n");
+    printf("Ingrese su opcion: ");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 5){
+        printf("\n(!!) Ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+
+    switch(opcion){
+        case 1:
+            printf("\nIngrese el nombre para cambiar: ");
+            getchar();
+            scanf("%[^\n]s", cambio);
+            while(validarInfo(total->totalUsuarios, cambio) == true){
+                veces += 1;
+                printf("\n(!!) Ese nombre ya esta registrado, ingrese otro: ");
+                getchar();
+                scanf("%[^\n]s", cambio);
+                if(veces > 3){
+                    printf("\n(!!) Demasiados intentos, volviendo al menu ...\n");
+                    menu(total);
+                }
+            }
+            strcpy(buscar->nombre,cambio);
+            veces = 0;
+            printf("\n\n*** SU NOMBRE HA SIDO CAMBIADO CON EXITO! ***\n\n\n");
+            break;
+        case 2:
+            printf("\nIngrese su nuevo apodo (nombre usuario): ");
+            getchar();
+            scanf("%[^\n]s", cambio);
+            while(validarInfo(total->totalUsuarios, cambio) == true){
+                veces++;
+                printf("\n(!!) Ese apodo ya esta registrado, ingrese otro: ");
+                getchar();
+                scanf("%[^\n]s", cambio);
+                if(veces > 3){
+                    printf("\n(!!) Demasiados intentos, volviendo al menu ...\n");
+                    menu(total);
+                }
+            }
+            strcpy(buscar->apodo,cambio);
+            strcpy(total->usuarioIngresado,cambio);
+            veces = 0;
+            printf("\n\n*** SU NOMBRE DE USUARIO HA SIDO CAMBIADO CON EXITO! ***\n\n\n");
+            break;
+        case 3:
+            printf("\n(!!) Advertencia: La nueva contrasena debe ser mayor a 5 caracteres\n");
+            printf("Ingrese su nueva contrasena: ");
+            getchar();
+            scanf("%[^\n]s", cambio);
+            while(strlen(cambio) < 5){
+                printf("\n(!!) No cumple con las condiciones, ingrese nuevamente: ");
+                getchar();
+                scanf("%[^\n]s", cambio);
+            }
+            strcpy(buscar->contrasena,cambio);
+            printf("\n\n*** SU CONTRASEÑA HA SIDO CAMBIADA CON EXITO! ***\n\n\n");
+            break;
+        case 4:
+            printf("\n(!!) Advertencia: Recuerde que el rango de edad es minimo 18 años\n");;
+            printf("Ingrese su edad: ");
+            scanf("%d", &edadU);
+            while(edadU < 18){
+                printf("\n(!!) Edad incompatible, ingrese nuevamente: ");
+                scanf("%d", &edadU);
+            }
+            buscar->edad = edadU;
+            printf("\n\n*** SU EDAD HA SIDO CAMBIADO CON EXITO! ***\n\n\n");
+            break;
+        case 5:
+            printf("\n1. Mujer   2. Hombre   3. No Binario\n");
+            printf("Ingrese la opcion para realizar el cambio: ");
+            scanf("%d", &opcionI);
+            while(opcionI < 1 || opcionI > 3){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &opcionI);
+            }
+            if(opcionI == 1) strcpy(buscar->identidadG,"mujer");
+            if(opcionI == 2) strcpy(buscar->identidadG,"hombre");
+            if(opcionI == 3) strcpy(buscar->identidadG,"nobinario");
+            printf("\n\n*** SU IDENTIDAD HA SIDO CAMBIADO CON EXITO ***\n\n\n");
+            break;
+    }
+}
+
+void EditarGustos(Red *total){
+    usuario *buscar = searchMap(total->totalUsuarios, total->usuarioIngresado);
+    if(buscar == NULL){
+        printf("Ha ocurrido un error, no se puede ingresar al perfil\n");
+        menu(total);
+    }
+    int opcion, cambio;
+    printf("Que gustos desea cambiar?:\n1. orientacion sexual\n2.genero musical favorito\n3.color favorito\n4.peliculas/salir\n5.estacion favorita\n6.bebestible\n7.playa/montana\n8.deporte/videojuegos\n9.perros/gatos\n10.dieta\n");
+    printf("Ingrese su opcion: ");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 10){
+        printf("\n(!!) Ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n");
+    switch(opcion){
+        case 1:
+            printf("Escoga entre las opciones, para cambiar su ORIENTACION SEXUAL:\n1. heterosexual\n2. homosexual\n3. bisexual\n4. pansexual\n5. asexual\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 5){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->orientacionS,"heterosexual");
+            if(cambio == 2) strcpy(buscar->gustos->orientacionS,"homosexual");
+            if(cambio == 3) strcpy(buscar->gustos->orientacionS,"bisexual");
+            if(cambio == 4) strcpy(buscar->gustos->orientacionS,"pansexual");
+            if(cambio == 5) strcpy(buscar->gustos->orientacionS,"asexual");
+            break;
+        case 2:
+            printf("Escoga entre las opciones, para cambiar su GENERO MUSICAL FAVORITO:\n1. rap\n2. rock\n3. pop\n4. electronica\n5. jazz\n6. reggaeton\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 6){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->generofav,"rap");
+            if(cambio == 2) strcpy(buscar->gustos->generofav,"rock");
+            if(cambio == 3) strcpy(buscar->gustos->generofav,"pop");
+            if(cambio == 4) strcpy(buscar->gustos->generofav,"electronica");
+            if(cambio == 5) strcpy(buscar->gustos->generofav,"jazz");
+            if(cambio == 6) strcpy(buscar->gustos->generofav,"reggaeton");
+            break;
+        case 3:
+            printf("Escoga entre las opciones, para cambiar su COLOR FAVORITO:\n1. naranjo\n2. amarillo\n3. verde\n4. azul\n5. rojo\n6. morado\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 6){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->colorfav,"naranjo");
+            if(cambio == 2) strcpy(buscar->gustos->colorfav,"amarillo");
+            if(cambio == 3) strcpy(buscar->gustos->colorfav,"verde");
+            if(cambio == 4) strcpy(buscar->gustos->colorfav,"azul");
+            if(cambio == 5) strcpy(buscar->gustos->colorfav,"rojo");
+            if(cambio == 6) strcpy(buscar->gustos->colorfav,"morado");
+            break;
+        case 4:
+            printf("Escoga entre las opciones, para cambiar su PREFERENCIA:\n1. Casa\n2. Salir\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 2){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->casaSalir,"casa");
+            if(cambio == 2) strcpy(buscar->gustos->casaSalir,"salir");
+            break;
+        case 5:
+            printf("Escoga entre las opciones, para cambiar su ESTACION DEL AÑO FAVORITA:\n1. Verano\n2. Invierno\n3. Primavera\n4. Otoño\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 4){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->estacionfav,"verano");
+            if(cambio == 2) strcpy(buscar->gustos->estacionfav,"invierno");
+            if(cambio == 3) strcpy(buscar->gustos->estacionfav,"primavera");
+            if(cambio == 4) strcpy(buscar->gustos->estacionfav,"otoño");
+            break;
+        case 6:
+            printf("Escoga entre las opciones, para cambiar su BEBESTIBLE FAVORITO:\n1. Te\n2. Cafe\n3. Bebida\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 3){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->liqfav,"te");
+            if(cambio == 2) strcpy(buscar->gustos->liqfav,"cafe");
+            if(cambio == 3) strcpy(buscar->gustos->liqfav,"bebida");
+            break;
+        case 7:
+            printf("Escoga entre las opciones, para cambiar su PREFERENCIA:\n1. Playa\n2. Montana\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 2){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->playaMontana,"playa");
+            if(cambio == 2) strcpy(buscar->gustos->playaMontana,"montana");
+            break;
+        case 8:
+            printf("Escoga entre las opciones, para cambiar su PREFERENCIA:\n1. Deporte\n2. Videojuegos\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 2){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->depVid,"deporte");
+            if(cambio == 2) strcpy(buscar->gustos->depVid,"videojuegos");
+            break;
+        case 9:
+            printf("Escoga entre las opciones, para cambiar su PREFERENCIA:\n1. Perros\n2. Gatos\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 2){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->PerroGato,"perro");
+            if(cambio == 2) strcpy(buscar->gustos->PerroGato,"gato");
+            break;
+        case 10:
+            printf("Escoga entre las opciones, para cambiar su DIETA:\n1. Vegetariano\n2. Carnivoro\n3. Vegano\n");
+            printf("Ingrese aqui: ");
+            scanf("%d", &cambio);
+            while(cambio < 1 || cambio > 3){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &cambio);
+            }
+            if(cambio == 1) strcpy(buscar->gustos->comida,"vegetariano");
+            if(cambio == 2) strcpy(buscar->gustos->comida,"carnivoro");
+            if(cambio == 3) strcpy(buscar->gustos->comida,"vegano");
+            break;
+    }
+    mostrarUsuario(buscar);
 }
    
 Red *crearRed(){
@@ -475,6 +772,7 @@ usuario *crearUsuario(){
     aux->gustos = (tipoGustos *) malloc(sizeof(tipoGustos));
     aux->fav = createList();
     aux->match = createList();
+    aux->compatibilidad = 0;
 
     return aux;
 }

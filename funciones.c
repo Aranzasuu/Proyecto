@@ -77,6 +77,7 @@ void ingresarApp(Red *total)
             registrarUsuario(total);
             break;
         case 2:
+            printf("\n\n\n********** INICIO DE SESION *********\n\n");
             printf("Ingrese su nombre de usuario: ");
             getchar();
             scanf("%[^\n]s", nomUsuario);
@@ -101,14 +102,14 @@ void ingresarApp(Red *total)
                 scanf("%[^\n]s", contUsuario);
                 intento++;
                 if(intento == 4){
-                    printf("\n(!!) Demasiados intentos, lo ressirigiremos a la pagina principal ...\n");
+                    printf("\n(!!) Demasiados intentos, lo redirigiremos a la pagina principal ...\n");
                     ingresarApp(total);
                     return;
                 }
             }
 
             strcpy(total->usuarioIngresado,nomUsuario);
-            printf("\n");
+            printf("\n-----------------------------------------\n");
             menu(total);
             break;
         case 3:
@@ -129,7 +130,7 @@ void mostrarUsuario(usuario *usu){
     printf("----------------------------------------------------\n\n");
     printf("INFORMACION PRINCIPAL: \n\n");
     printf("NOMBRE               > %s\nAPODO                > %s\nCONTRASENA           > %s\nEDAD                 > %d\n", usu->nombre, usu->apodo, usu->contrasena, usu->edad);
-    printf("IDENTIDAD SEXUAL     > %s\nORIENTACION SEXUAL   > %s\n",usu->identidadG, usu->gustos->orientacionS);
+    printf("IDENTIDAD SEXUAL     > %s\nORIENTACION SEXUAL   > %s\nINTENCION            > %s\n",usu->identidadG, usu->gustos->orientacionS, usu->intenciones);
     printf("\nGUSTOS: \n\n");
     printf("> genero musical favorito ----- %s\n",usu->gustos->generofav);
     printf("> color favorito -------------- %s\n",usu->gustos->colorfav);
@@ -141,13 +142,13 @@ void mostrarUsuario(usuario *usu){
     printf("> deportes o videojuegos ------ %s\n",usu->gustos->depVid);
     printf("> perros o gatos -------------- %s\n",usu->gustos->PerroGato);
     printf("> Dieta ----------------------- %s\n",usu->gustos->comida);
-    //printf("-> compatibilidad = %d\n",usu->compatibilidad);
+    printf("-> compatibilidad = %d\n",usu->compatibilidad);
     printf("----------------------------------------------------\n\n\n\n\n");
 }
 
 void registrarUsuario(Red *total){
     usuario *new = crearUsuario();
-    int edadU, identidad, orientacion, generoMus, color, CS, estacion, bebestible, PM, DV, PG, dieta;
+    int edadU, identidad, intencion, orientacion, generoMus, color, PL, CS, estacion, bebestible, PM, DV, PG, dieta;
     char nomUsu[100],apodoU[100], contraU[100];
 
     printf("\n****************** REGISTRO ******************\n");
@@ -161,6 +162,7 @@ void registrarUsuario(Red *total){
         getchar();
         scanf("%[^\n]s",nomUsu);
     }
+    
     strcpy(new->nombre,nomUsu);
 
     printf("\n-> Ingrese su nombre de usuario = ");
@@ -171,19 +173,19 @@ void registrarUsuario(Red *total){
         getchar();
         scanf("%[^\n]s",apodoU);
     }
-    strcpy(new->apodo,apodoU);
+    strcpy(new->apodo, apodoU);
 
-    printf("\n-> Ingrese su contraseña, para mayor seguridad ingrese mas de 5 letras: ");
+    printf("\n-> Ingrese su contrasena, para mayor seguridad ingrese mas de 5 letras: ");
     getchar();
     scanf("%[^\n]s",contraU);
     while(strlen(contraU) < 5){
-        printf("\n(!!) Minimo de caracteres no alcanzado, ingrese de nuevo su contraseña: ");
+        printf("\n(!!) Minimo de caracteres no alcanzado, ingrese de nuevo su contrasena: ");
         getchar();
         scanf("%[^\n]s",contraU);
     }
     strcpy(new->contrasena,contraU);
 
-    printf("\n(!!) Recuerde que debes ser mayor de 18 años para poder ocupar la aplicacion\n");
+    printf("\n(!!) Recuerde que debes ser mayor de 18 anyos para poder ocupar la aplicacion\n");
     printf("-> Ingrese su edad: ");
     scanf("%d", &edadU);
     if(edadU < 18){
@@ -200,13 +202,31 @@ void registrarUsuario(Red *total){
     }
     switch(identidad){
         case 1:
-            strcpy(new->identidadG,"Masculino");
+            strcpy(new->identidadG,"masculino");
             break;
         case 2:
-            strcpy(new->identidadG,"Femenino");
+            strcpy(new->identidadG,"femenino");
             break;
         case 3:
-            strcpy(new->identidadG,"NoBinario");
+            strcpy(new->identidadG,"nobinario");
+            break;
+    }
+
+    printf("\n-> Ingrese la opcion para la cual utiliza la app:\n1. Buscar Amigos/as   2. Buscar Pareja  3. Encuentros casuales\n");
+    scanf("%d", &intencion);
+    while(intencion < 1 || intencion > 3){
+        printf("\n(!!) Ingrese una opcion valida\n");
+        scanf("%d", &intencion);
+    }
+    switch(identidad){
+        case 1:
+            strcpy(new->intenciones,"amigos");
+            break;
+        case 2:
+            strcpy(new->intenciones,"pareja");
+            break;
+        case 3:
+            strcpy(new->intenciones,"encuentro casual");
             break;
     }
 
@@ -289,6 +309,15 @@ void registrarUsuario(Red *total){
             break;
     }
 
+    printf("-> Prefieres los libros o las peliculas?\n1. Libros  2. Peliculas\n");
+    scanf("%d", &PL);
+    while(PL < 1 || PL > 2){
+        printf("\n(!!) Ingrese una opcion valida: ");
+        scanf("%d", &PL);
+    }
+    if(PL == 1) strcpy(new->gustos->PelLib,"libros");
+    else strcpy(new->gustos->PelLib,"peliculas");
+
     printf("-> Prefieres salir o quedarte en casa?\n1. Casa  2. Salir\n");
     scanf("%d", &CS);
     while(CS < 1 || CS > 2){
@@ -298,7 +327,7 @@ void registrarUsuario(Red *total){
     if(CS == 1) strcpy(new->gustos->casaSalir,"casa");
     else strcpy(new->gustos->casaSalir,"salir");
 
-    printf("-> Cual estacion del año es tu favorita:\n1. Otoño  2. Invierno  3. Primavera  4. Verano\n");
+    printf("-> Cual estacion del anyo es tu favorita:\n1. Otono  2. Invierno  3. Primavera  4. Verano\n");
     scanf("%d", &estacion);
     while(estacion < 1 || estacion > 4){
         printf("\n(!!) Ingrese una opcion valida: ");
@@ -306,7 +335,7 @@ void registrarUsuario(Red *total){
     }
     switch(estacion){
         case 1:
-            strcpy(new->gustos->estacionfav, "otoño");
+            strcpy(new->gustos->estacionfav, "otono");
             break;
         case 2:
             strcpy(new->gustos->estacionfav, "invierno");
@@ -337,7 +366,7 @@ void registrarUsuario(Red *total){
             break;
     }
 
-    printf("-> Prefieres la playa o la montaña:\n1. Playa  2.Montaña\n");
+    printf("-> Prefieres la playa o la montana:\n1. Playa  2.Montana\n");
     scanf("%d", &PM);
     while(PM < 1 || PM > 2){
         printf("\n(!!) Ingrese una opcion valida: ");
@@ -403,12 +432,7 @@ bool validarContrasena(Map *total, char *nomUsuario, char *contUsuario){
     return false;
 }
 
-void calcularCompatibilidad(Red *total){
-    usuario *ingreso = searchMap(total->totalUsuarios,total->usuarioIngresado);
-    if(ingreso == NULL){
-        printf("Hubo un error, el usuario no se ingresó correctamente\n");
-        menu(total);
-    }
+void calculo(Red *total, usuario *ingreso){
     usuario *indice = firstMap(total->totalUsuarios);
     while(indice != NULL){
         if(strcmp(indice->gustos->casaSalir,ingreso->gustos->casaSalir) == 0) indice->compatibilidad += 1;
@@ -424,23 +448,397 @@ void calcularCompatibilidad(Red *total){
         if(strcmp(indice->gustos->playaMontana,ingreso->gustos->playaMontana) == 0) indice->compatibilidad += 1;
         indice = nextMap(total->totalUsuarios);
     }
-    mostrarMapa(total->totalUsuarios);
 }
 
-void BuscarPersonas(Red *total){
+void Compatibilidad(Red *total, int opcion, List *filtro){
+    usuario *ingreso = searchMap(total->totalUsuarios,total->usuarioIngresado);
+    if(ingreso == NULL){
+        printf("Hubo un error, el usuario no se ingresó correctamente\n");
+        menu(total);
+    }
+
+    calculo(total, ingreso);
+
+    usuario *indice2 = firstMap(total->totalUsuarios);
+    int opcionFav;
+    if(opcion == 1){
+        while(indice2 != NULL){
+            if(indice2->compatibilidad >= 5 && (strcmp(indice2->apodo,ingreso->apodo) != 0)){
+                pushFront(indice2->fav, ingreso);
+                if(Filtrar(indice2, filtro) == true){
+                    mostrarUsuario(indice2);
+                    printf("> Desea agregar la persona a su lista de favoritos?\n1. SI  2. NO\n");
+                    scanf("%d", &opcionFav);
+                    while(opcionFav < 1 || opcionFav > 2){
+                        printf("ingrese una opcion valida: ");
+                        scanf("%d", &opcionFav);
+                    }
+                    if(opcionFav == 1){
+                        pushBack(ingreso->fav, indice2);
+                    }
+                }
+            }
+            indice2 = nextMap(total->totalUsuarios);
+        }
+    }
+    else{
+        while(indice2 != NULL){
+            if(indice2->compatibilidad <= 5 && (strcmp(indice2->apodo,ingreso->apodo) != 0)){
+                pushFront(indice2->fav, ingreso);
+                if(Filtrar(indice2, filtro) == true){
+                    mostrarUsuario(indice2);
+                    printf("> Desea agregar la persona a su lista de favoritos?\n1. SI  2. NO\n");
+                    scanf("%d", &opcionFav);
+                    while(opcionFav < 1 || opcionFav > 2){
+                        printf("ingrese una opcion valida: ");
+                        scanf("%d", &opcionFav);
+                    }
+                    if(opcionFav == 1){
+                        pushBack(ingreso->fav, indice2);
+                    }
+                }
+            }
+            indice2 = nextMap(total->totalUsuarios);
+        }
+    }
+}
+
+bool Filtrar(usuario *fav, List *filtro){
+    char ninguno[8] = "ninguno";
+        int indice = 1;
+        char *filtros = firstList(filtro);
+        while(filtros != NULL){
+            if(indice == 1){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->generofav) != 0){
+                        return false;
+                    }
+                }        
+            }
+            else if(indice == 2){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->colorfav) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 3){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->PelLib) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 4){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->casaSalir) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 5){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->estacionfav) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 6){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->liqfav) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 7){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->playaMontana) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 8){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->depVid) != 0){
+                        return false;
+                    }
+                }
+            }
+            else if(indice == 9){
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->PerroGato) != 0){
+                        return false;
+                    }
+                }
+            }
+            else{
+                if(strcmp(filtros,ninguno) != 0){
+                    if(strcmp(filtros, fav->gustos->comida) != 0){
+                        return false;
+                    }
+                }
+            }
+            indice++;
+            filtros = nextList(filtro);
+        }
+    return true;
+}
+
+void ingresarFiltros(List *filtro){
+    printf("> Preferencia gustos musicales:\n1. Rap  2. Rock  3. Pop 4. Electronica 5. Jazz  6. Reggaeton  7. Ninguno\n");
     int opcion;
-    calcularCompatibilidad(total);
-    printf("Desea buscar personas similares a usted, o diferentes?\n1. Similares  2. Distintos\n");
     scanf("%d", &opcion);
-    while(opcion < 1 || opcion > 2){
-        printf("Opcion invalida, ingrese nuevamente la operacion a realizar: ");
+    while(opcion < 1 || opcion > 7){
+        printf("ingrese una opcion valida: ");
         scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "rap");
+                break;
+            case 2:
+                pushBack(filtro, "rock");
+                break;
+            case 3:
+                pushBack(filtro, "pop");
+                break;
+            case 4:
+                pushBack(filtro, "electronica");
+                break;
+            case 5:
+                pushBack(filtro, "jazz");
+                break;
+            case 6:
+                pushBack(filtro, "reggaeton");
+                break;
+            case 7:
+                pushBack(filtro, "ninguno");
+                break;
+        }
+
+    printf("> Preferencia colores favoritos:\n1. Azul  2. Rojo  3. Morado 4. Amarillo 5. Naranjo  6. Verde  7. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 7){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "azul");
+                break;
+            case 2:
+                pushBack(filtro, "rojo");
+                break;
+            case 3:
+                pushBack(filtro, "morado");
+                break;
+            case 4:
+                pushBack(filtro, "amarillo");
+                break;
+            case 5:
+                pushBack(filtro, "naranjo");
+                break;
+            case 6:
+                pushBack(filtro, "verde");
+                break;
+            case 7:
+                pushBack(filtro, "ninguno");
+                break;
+        }
+
+    printf("> Preferencia peliculas o libros:\n1. Peliculas  2. Libros  3. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 3){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "peliculas");
+                break;
+            case 2:
+                pushBack(filtro, "libros");
+                break;
+            case 3:
+                pushBack(filtro, "ninguno");
+                break;
+    }
+
+    printf("> Preferencia quedarse en casa o salir:\n1. Quedarse en casa  2. Salir  3. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 3){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "casa");
+                break;
+            case 2:
+                pushBack(filtro, "salir");
+                break;
+            case 3:
+                pushBack(filtro, "ninguno");
+                break;
+    }
+
+    printf("> Preferencia estacion del anyo favorita:\n1. Verano  2. Invierno  3. Primavera  4. Otono  5. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 5){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+        case 1:
+            pushBack(filtro, "verano");
+            break;
+        case 2:
+            pushBack(filtro, "invierno");
+            break;
+        case 3:
+            pushBack(filtro, "primavera");
+            break;
+        case 4:
+            pushBack(filtro, "otono");
+            break;
+        case 5:
+            pushBack(filtro, "ninguno");
+            break;
+    }
+
+    printf("> Preferencia bebestible favorito:\n1. Te  2. Cafe  3. Bebida  4. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 4){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+        case 1:
+            pushBack(filtro, "te");
+            break;
+        case 2:
+            pushBack(filtro, "cafe");
+            break;
+        case 3:
+            pushBack(filtro, "bebida");
+            break;
+        case 4:
+            pushBack(filtro, "ninguno");
+            break;
+    }
+
+    printf("> Preferencia ir a la playa o ir a las montanas:\n1. Playa  2. Montanas  3. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 3){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "playa");
+                break;
+            case 2:
+                pushBack(filtro, "motana");
+                break;
+            case 3:
+                pushBack(filtro, "ninguno");
+                break;
+    }
+
+    printf("> Preferencia entre hacer deporte o jugar videojuegos:\n1. Deporte  2. Videojuegos  3. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 3){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "deporte");
+                break;
+            case 2:
+                pushBack(filtro, "videojuegos");
+                break;
+            case 3:
+                pushBack(filtro, "ninguno");
+                break;
+    }
+
+    printf("> Preferencia entre los perros y los gatos:\n1. Perros  2. Gatos  3. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 3){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+            case 1:
+                pushBack(filtro, "perro");
+                break;
+            case 2:
+                pushBack(filtro, "gato");
+                break;
+            case 3:
+                pushBack(filtro, "ninguno");
+                break;
+    }
+
+    printf("> Preferencia en la dieta:\n1. Vegano  2. Vegetariano  3. Carnivoro  4. Ninguno\n");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 4){
+        printf("ingrese una opcion valida: ");
+        scanf("%d", &opcion);
+    }
+    printf("\n\n");
+    switch(opcion){
+        case 1:
+            pushBack(filtro, "vegano");
+            break;
+        case 2:
+            pushBack(filtro, "vegetariano");
+            break;
+        case 3:
+            pushBack(filtro, "carnivoro");
+            break;
+        case 4:
+            pushBack(filtro, "ninguno");
+            break;
+    }
+}
+
+bool revisarListMatch(usuario *candidatos, char *apodo){
+    usuario *indice = firstList(candidatos->fav);
+    while(indice != NULL){
+        if(strcmp(indice->apodo, apodo) == 0){
+            pushBack(candidatos->match, indice);
+            return true;
+        }
+    }
+    return false;
+}
+
+void RevisarMatch(Red *total){
+    usuario *registrado = searchMap(total->totalUsuarios, total->usuarioIngresado);
+    usuario *candidatos = firstList(registrado->fav);
+    while(candidatos != NULL){
+        if(revisarListMatch(candidatos, registrado->apodo) == true){
+            pushBack(registrado->match,candidatos);
+            printf("Has hecho match con %s, enviale un mensaje!\n", candidatos->apodo);
+        }
+        candidatos = nextList(registrado->fav);
     }
 
 }
 
 void impresionMenu(){
-    printf("*********** MENU **********\n");
+    printf("\n\n\n\n\n*********** MENU **********\n\n");
     printf("1. Ingresar Perfil\n");
     printf("2. Editar Perfil\n");
     printf("3. Editar Gustos\n");
@@ -476,16 +874,16 @@ void menu(Red * total){
             BuscarPersonas(total);
             break;
         case 5:
-            //ListFav();
+            ListFav(total);
             break;
         case 6:
-            //ListMatch();
+            ListMatch(total);
             break;
         case 7:
             //Mensajes();
             break;
         case 8:
-            //Top10();
+            Top10(total);
             break;
         case 9: 
             printf("\n\n****** Se ha cerrado correctamente la sesion, nos vemos! ******\n\n\n");
@@ -519,9 +917,9 @@ void editarPerfil(Red *total){
         menu(total);
     }
 
-    int opcion, veces = 1, edadU, opcionI;
+    int opcion, veces = 1, edadU, opcionI, opcionInt;
     char cambio[100];
-    printf("Que gustos desea cambiar?:\n1. Nombre\n2. Nombre usuario\n3. Contrasena\n4. Edad\n5. Identidad sexual\n\n");
+    printf("Que gustos desea cambiar?:\n1. Nombre\n2. Nombre usuario\n3. Contrasena\n4. Identidad sexual\n5. Intenciones\n\n");
     printf("Ingrese su opcion: ");
     scanf("%d", &opcion);
     while(opcion < 1 || opcion > 5){
@@ -578,20 +976,9 @@ void editarPerfil(Red *total){
                 scanf("%[^\n]s", cambio);
             }
             strcpy(buscar->contrasena,cambio);
-            printf("\n\n*** SU CONTRASEÑA HA SIDO CAMBIADA CON EXITO! ***\n\n\n");
+            printf("\n\n*** SU CONTRASENA HA SIDO CAMBIADA CON EXITO! ***\n\n\n");
             break;
         case 4:
-            printf("\n(!!) Advertencia: Recuerde que el rango de edad es minimo 18 años\n");;
-            printf("Ingrese su edad: ");
-            scanf("%d", &edadU);
-            while(edadU < 18){
-                printf("\n(!!) Edad incompatible, ingrese nuevamente: ");
-                scanf("%d", &edadU);
-            }
-            buscar->edad = edadU;
-            printf("\n\n*** SU EDAD HA SIDO CAMBIADO CON EXITO! ***\n\n\n");
-            break;
-        case 5:
             printf("\n1. Mujer   2. Hombre   3. No Binario\n");
             printf("Ingrese la opcion para realizar el cambio: ");
             scanf("%d", &opcionI);
@@ -603,6 +990,19 @@ void editarPerfil(Red *total){
             if(opcionI == 2) strcpy(buscar->identidadG,"hombre");
             if(opcionI == 3) strcpy(buscar->identidadG,"nobinario");
             printf("\n\n*** SU IDENTIDAD HA SIDO CAMBIADO CON EXITO ***\n\n\n");
+            break;
+        case 5:
+            printf("\n1. Amigos/as   2. Pareja   3. Encuentro Casual\n");
+            printf("Ingrese la opcion para realizar el cambio: ");
+            scanf("%d", &opcionInt);
+            while(opcionInt < 1 || opcionInt > 3){
+                printf("\n(!!) Ingrese una opcion valida: ");
+                scanf("%d", &opcionI);
+            }
+            if(opcionInt == 1) strcpy(buscar->intenciones,"amigos");
+            if(opcionInt == 2) strcpy(buscar->intenciones,"pareja");
+            if(opcionInt == 3) strcpy(buscar->intenciones,"encuentro casual");
+            printf("\n\n*** SU INTENCION HA SIDO CAMBIADO CON EXITO ***\n\n\n");
             break;
     }
 }
@@ -679,7 +1079,7 @@ void EditarGustos(Red *total){
             if(cambio == 2) strcpy(buscar->gustos->casaSalir,"salir");
             break;
         case 5:
-            printf("Escoga entre las opciones, para cambiar su ESTACION DEL AÑO FAVORITA:\n1. Verano\n2. Invierno\n3. Primavera\n4. Otoño\n");
+            printf("Escoga entre las opciones, para cambiar su ESTACION DEL ANYO FAVORITA:\n1. Verano\n2. Invierno\n3. Primavera\n4. Otono\n");
             printf("Ingrese aqui: ");
             scanf("%d", &cambio);
             while(cambio < 1 || cambio > 4){
@@ -689,7 +1089,7 @@ void EditarGustos(Red *total){
             if(cambio == 1) strcpy(buscar->gustos->estacionfav,"verano");
             if(cambio == 2) strcpy(buscar->gustos->estacionfav,"invierno");
             if(cambio == 3) strcpy(buscar->gustos->estacionfav,"primavera");
-            if(cambio == 4) strcpy(buscar->gustos->estacionfav,"otoño");
+            if(cambio == 4) strcpy(buscar->gustos->estacionfav,"otono");
             break;
         case 6:
             printf("Escoga entre las opciones, para cambiar su BEBESTIBLE FAVORITO:\n1. Te\n2. Cafe\n3. Bebida\n");
@@ -751,6 +1151,80 @@ void EditarGustos(Red *total){
     }
     mostrarUsuario(buscar);
 }
+
+void BuscarPersonas(Red *total){
+    int opcion;
+    printf("Desea buscar personas similares a usted, o diferentes?\n1. Similares  2. Distintos\n\nIngrese su opcion: ");
+    scanf("%d", &opcion);
+    while(opcion < 1 || opcion > 2){
+        printf("Opcion invalida, ingrese nuevamente la operacion a realizar: ");
+        scanf("%d", &opcion);
+    }
+    List *filtro = createList();
+    printf("\n     SECCION FILTRO\n--------------------\n\n");
+    printf("(!!) En esta seccion podras seleccionar ciertos aspectos que puedes \nseleccionar para una busqueda mas eficas y especifica\n\n");
+    ingresarFiltros(filtro);
+    if(opcion == 1){
+        Compatibilidad(total, opcion, filtro);
+    }
+
+    else{
+        Compatibilidad(total, opcion, filtro);
+    }
+
+    RevisarMatch(total);
+    // Aquí revisamos si se hizo un match :p
+    /* La idea es recorrer la lista de fav del usuario que ingreso, buscamos aquellas personas en el mapa y revisamos su lista de fav
+    si el usuario está, lo ingresamos a la lista de match, si el usuario ingresa a la opcion de ver lista de match, inciamos la conversacion,
+    cosa que cuando entre a la bandeja de mensajes, se muestre el mapa, es decir el nombre de la persona y los mensajes.*/
+
+
+
+}
+
+void ListFav(Red *total){
+    usuario *ingresado = searchMap(total->totalUsuarios, total->usuarioIngresado);
+    usuario *candidatos = firstList(ingresado->fav);
+    int opcion;
+    if(candidatos == NULL){
+        printf("Aun no has guardado a nadie en tu lista\n");
+    }
+    else{
+        while(candidatos != NULL){
+            mostrarUsuario(candidatos);
+            printf("Deseas eliminar al usuario?\n1. SI  2. NO\n");
+            scanf("%d", &opcion);
+            while(opcion < 1 || opcion > 2){
+                printf("Ingrese una opcion valida: ");
+                scanf("%d", &opcion);
+            }
+            if(opcion == 1){
+                popCurrent(ingresado->fav);
+            }
+            candidatos = nextList(ingresado->fav);
+        }        
+    }
+}
+
+void ListMatch(Red *total){
+    usuario *ingreso = searchMap(total->totalUsuarios, total->usuarioIngresado);
+    usuario *candidato = firstList(ingreso->match);
+    if(candidato == NULL){
+        printf("Aun no has hecho match con ninguna persona :c\n");
+    }
+    else{
+        while(candidato != NULL){
+            mostrarUsuario(candidato);
+            candidato = nextList(ingreso->match);
+        }
+    }
+}
+
+void Top10(Red *total){
+    usuario *ingreso = searchMap(total->totalUsuarios, total->usuarioIngresado);
+    calculo(total,ingreso);
+    List *top = createList();
+}
    
 Red *crearRed(){
     Red *usuario = (Red *) malloc(sizeof(Red));
@@ -761,7 +1235,6 @@ Red *crearRed(){
     }
 
     usuario->totalUsuarios = createMap(is_equal_string);
-    usuario->gustos = createMap(is_equal_string);
     usuario->cantidad = 0;
 
     return usuario;
@@ -789,7 +1262,7 @@ void importar(FILE *archivo, Red* total)
 
         usuario* AuxUsu = crearUsuario();
         
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < 17; i++)
         {
             const char* aux = get_csv_field(linea, i);
             total->cantidad++;
@@ -810,40 +1283,43 @@ void importar(FILE *archivo, Red* total)
                     AuxUsu->edad = num;
                     break;
                 case 4:
-                    strcpy(AuxUsu->identidadG,aux);
+                    strcpy(AuxUsu->identidadG, aux);
                     break;
                 case 5:
-                    strcpy(AuxUsu->gustos->orientacionS,aux);
+                    strcpy(AuxUsu->intenciones, aux);
                     break;
                 case 6:
-                    strcpy(AuxUsu->gustos->generofav,aux);
+                    strcpy(AuxUsu->gustos->orientacionS, aux);
                     break;
                 case 7:
-                    strcpy(AuxUsu->gustos->colorfav,aux);
+                    strcpy(AuxUsu->gustos->generofav, aux);
                     break;
                 case 8:
-                    strcpy(AuxUsu->gustos->PelLib,aux);
+                    strcpy(AuxUsu->gustos->colorfav, aux);
                     break;
                 case 9:
-                    strcpy(AuxUsu->gustos->casaSalir,aux);
+                    strcpy(AuxUsu->gustos->PelLib, aux);
                     break;
                 case 10:
-                    strcpy(AuxUsu->gustos->estacionfav,aux);
+                    strcpy(AuxUsu->gustos->casaSalir, aux);
                     break;
                 case 11:
-                    strcpy(AuxUsu->gustos->liqfav,aux);
+                    strcpy(AuxUsu->gustos->estacionfav, aux);
                     break;
                 case 12:
-                    strcpy(AuxUsu->gustos->playaMontana,aux);
+                    strcpy(AuxUsu->gustos->liqfav, aux);
                     break;
                 case 13:
-                    strcpy(AuxUsu->gustos->depVid,aux);
+                    strcpy(AuxUsu->gustos->playaMontana, aux);
                     break;
                 case 14:
-                    strcpy(AuxUsu->gustos->PerroGato,aux);
+                    strcpy(AuxUsu->gustos->depVid, aux);
                     break;
                 case 15:
-                    strcpy(AuxUsu->gustos->comida,aux);
+                    strcpy(AuxUsu->gustos->PerroGato, aux);
+                    break;
+                case 16:
+                    strcpy(AuxUsu->gustos->comida, aux);
                     break;
             }
         }

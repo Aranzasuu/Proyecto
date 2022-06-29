@@ -142,7 +142,6 @@ void mostrarUsuario(usuario *usu){
     printf("> deportes o videojuegos ------ %s\n",usu->gustos->depVid);
     printf("> perros o gatos -------------- %s\n",usu->gustos->PerroGato);
     printf("> Dieta ----------------------- %s\n",usu->gustos->comida);
-    printf("-> compatibilidad = %d\n",usu->compatibilidad);
     printf("----------------------------------------------------\n\n\n\n\n");
 }
 
@@ -837,6 +836,18 @@ void RevisarMatch(Red *total){
 
 }
 
+int buscarMaxCompatible(Map *total){
+    int maximo = 0;
+    usuario *indice = firstMap(total);
+    while(indice != NULL){
+        if(indice->compatibilidad > maximo){
+            maximo = indice->compatibilidad;
+        }
+        indice = nextMap(total);
+    }
+    return maximo;
+}
+
 void impresionMenu(){
     printf("\n\n\n\n\n*********** MENU **********\n\n");
     printf("1. Ingresar Perfil\n");
@@ -1223,7 +1234,30 @@ void ListMatch(Red *total){
 void Top10(Red *total){
     usuario *ingreso = searchMap(total->totalUsuarios, total->usuarioIngresado);
     calculo(total,ingreso);
-    List *top = createList();
+    usuario *indice = firstMap(total->totalUsuarios);
+    List *lista = createList();
+    int maximo = buscarMaxCompatible(total->totalUsuarios);
+    int contador = 1;
+
+    /*while(indice != NULL){
+        if(indice->compatibilidad == maximo  && contador <= 10){
+            mostrarUsuario(indice);
+            pushBack(lista,indice);
+            contador++;
+        }
+        indice = nextMap(total->totalUsuarios);
+    }
+
+    usuario *indList = firstList(lista);
+    if(indList == NULL){
+        printf("No hay ninguna coincidencia con ningun usuario :C\n");
+    }
+    else{
+        while(indList != NULL){
+            mostrarUsuario(indList);
+            indList = nextList(lista);
+        }
+    }*/
 }
    
 Red *crearRed(){

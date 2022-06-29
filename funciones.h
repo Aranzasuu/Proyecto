@@ -68,5 +68,6 @@ void ingresarFiltros(List *filtro);
 bool Filtrar(usuario *fav, List *filtro);
 void RevisarMatch(Red *total);
 bool revisarListMatch(usuario *candidatos, char *apodo);
+int buscarMaxCompatible(Map *total);
 
 #endif

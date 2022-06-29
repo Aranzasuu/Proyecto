@@ -60,7 +60,7 @@ void ingresarApp(Red *total)
     int opcion, intento = 0;
     char nomUsuario[100], contUsuario[100];
 
-    printf("\n\n                 Bienvenidx a TYNDER!\n-------------------------------------------------------\n\n");
+    printf("\n\n                 Bienvenidx a SOCIAL MEET!\n-------------------------------------------------------\n\n");
     printf(" 1 -> Registrarse\n");
     printf(" 2 -> Iniciar sesion\n");
     printf(" 3 -> Salir de la app\n\n");
@@ -115,14 +115,6 @@ void ingresarApp(Red *total)
         case 3:
             printf("\nHa salido correctamente de la aplicacion! :D\n");
             return;
-    }
-}
-
-void mostrarMapa(Map *totalUsuarios){
-    usuario *unitario = firstMap(totalUsuarios);
-    while(unitario != NULL){
-        mostrarUsuario(unitario);
-        unitario = nextMap(totalUsuarios);
     }
 }
 
@@ -1363,6 +1355,5 @@ void importar(FILE *archivo, Red* total)
             insertMap(total->totalUsuarios, AuxUsu->apodo,AuxUsu);
         }
     }
-    //mostrarMapa(total->totalUsuarios);
     fclose(archivo);
 }
